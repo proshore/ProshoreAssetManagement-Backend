@@ -20,3 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('register-admin',[AdminController::class,'registerAdmin']);
 Route::post('login-admin',[AdminController::class,'loginAdmin']);
+
+
+//protected Route
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::post('logout-admin',[AdminController::class,'logoutAdmin']);
+});
+

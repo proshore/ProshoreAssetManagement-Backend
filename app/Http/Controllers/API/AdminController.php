@@ -22,6 +22,8 @@ class AdminController extends Controller
             'admin'=> new AdminResource($adminDetails)
         ],Response::HTTP_CREATED);
     }
+
+
     public function loginAdmin(AdminRequest $request){
         $adminDetails=Admin::where('email',$request->email)->first();
 //        dd($adminDetails);
@@ -39,12 +41,19 @@ class AdminController extends Controller
         }
        $token=$adminDetails->createToken('auth_token');
        return response()->json([
-
            'admins'=> new AdminResource($adminDetails),
            'access_token'=>$token->plainTextToken,
            'token_type'=>'Bearer',
+           'message'=>'login success'
        ],Response::HTTP_OK);
 
-//       $token=$adminDetails->createToken('Laravel password Grant Client')->accessToken;
     }
+    public function logoutAdmin(){
+        auth()->user()->tokens()->delete();
+        return response()->json([
+            'message'=>'logout success'
+        ],Response::HTTP_OK);
+
+    }
+
 }
