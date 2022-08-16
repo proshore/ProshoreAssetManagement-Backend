@@ -20,7 +20,7 @@ class AdminController extends Controller
         return response()->json([
             'message'=>'admin registred successfully',
             'admin'=> new AdminResource($adminDetails)
-        ],Response::HTTP_CREATED);
+        ],Response::HTTP_CREATED); //added status
     }
 
 

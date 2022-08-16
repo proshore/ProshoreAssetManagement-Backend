@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdminController;
+use App\Http\Controllers\API\RegisterUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('register-admin',[AdminController::class,'registerAdmin']);
 Route::post('login-admin',[AdminController::class,'loginAdmin']);
+Route::apiResource("register-user",RegisterUserController::class);
 
 
 //protected Route
