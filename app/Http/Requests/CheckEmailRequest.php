@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use function Symfony\Component\Translation\t;
 
-class RegisterUserRequest extends FormRequest
+class CheckEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +25,7 @@ class RegisterUserRequest extends FormRequest
     public function rules()
     {
         return [
-
-                'full_name'=>'required|string|max:255',
-                'email'=>'required|string|email|max:255|unique:register_users',
-                'phone_number'=>'nullable|min:10|string',
-                'role'=>'required',
-                'status'=>'required',
-            ];
+            'email' => 'required|email'
+        ];
     }
 }

@@ -25,7 +25,7 @@ class AdminRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-        if($request->is('api/login-admin')){
+        if($request->is('api/admin/login')){
             $rules =[
                 'email'=>'required|email',
                 'password'=>'required|min:6|regex:[@]'

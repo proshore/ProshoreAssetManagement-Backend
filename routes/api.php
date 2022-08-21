@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdminController;
-use App\Http\Controllers\API\RegisterUserController;
+use App\Http\Controllers\API\EmployeeVendorController;
+use App\Http\Controllers\API\InviteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,13 +20,27 @@ use App\Http\Controllers\API\RegisterUserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('register-admin',[AdminController::class,'registerAdmin']);
-Route::post('login-admin',[AdminController::class,'loginAdmin']);
-Route::apiResource("register-user",RegisterUserController::class);
+//Admin Register Login and Logout
+Route::controller(AdminController::class)->prefix('admin')->group(function (){
+    Route::post('register', 'registerAdmin');
+    Route::post('login','loginAdmin');
+    Route::post('logout', 'logoutAdmin')->middleware('auth:sanctum');
+});
+
+//Route For The Data related To Vendor & Employee
+Route::controller(EmployeeVendorController::class)->prefix('admin')->group(function (){
+    Route::get('all-user', 'viewAllUsers');
+    Route::post('view-user-roles/{id}', 'viewUserRole');
+    Route::post('delete-user/{id}', 'deleteUser');
+    Route::post('invite', 'InviteOther');
+    Route::post('update-status/{id}', 'updateUserStatus');
+});
 
 
-//protected Route
-Route::middleware(['auth:sanctum'])->group(function(){
-    Route::post('logout-admin',[AdminController::class,'logoutAdmin']);
+Route::controller(InviteController::class)->prefix('invite')->group(function (){
+    Route::get('invited-users', 'listOfInvitedUsers');
+    Route::post('resend', 'reInvite');
+    Route::get('revoke/{id}', 'revoke');
+
 });
 
