@@ -30,20 +30,16 @@ class CreateRoleSeeder extends Seeder
             'role'=>'Vendor'
         ]);
         VendorEmployee::create([
-            'name'=>'elle maria',
-            'email'=>'elle@gmail.com'
+            'name'=>'austin mariaaa',
+            'email'=>'austinaa@gmail.com'
         ]);
         VendorEmployee::create([
-            'name'=>'austin maria',
-            'email'=>'austin@gmail.com'
+            'name'=>'cathrinea mcbroom',
+            'email'=>'cathrineaa@gmail.com'
         ]);
         VendorEmployee::create([
-            'name'=>'cathrine mcbroom',
-            'email'=>'cathrine@gmail.com'
-        ]);
-        VendorEmployee::create([
-            'name'=>'steel mcbroom',
-            'email'=>'steel@gmail.com'
+            'name'=>'steell mcbroom',
+            'email'=>'steelaa@gmail.com'
         ]);
         UserRole::create([
             'vendor_employee_id'=>1,

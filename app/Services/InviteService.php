@@ -22,7 +22,7 @@ public function generateToken():string{
     public function invite($name, $email, $role_id, $vendor_employee_id): bool
     {
         $token = $this->generateToken();
-        $url=config('frontend.url') . '/register' .$token  . '?email=' .$email;
+        $url=config('=.url') . '/register' .$token  . '?email=' .$email .'?name=' .$name . '?role_id=' .$role_id;
 
         $employeeVendor = InviteToken::create([
             'name' => $name,

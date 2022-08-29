@@ -40,7 +40,6 @@ class InviteController extends Controller
     }
     public function revoke(Request $request):JsonResponse
     {
-//        dd('babita');
         $status = InviteService::revokeInvite($request);
 
         if (!$status) {

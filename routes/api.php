@@ -31,16 +31,15 @@ Route::controller(AdminController::class)->prefix('admin')->group(function (){
 Route::controller(EmployeeVendorController::class)->prefix('admin')->group(function (){
     Route::get('all-user', 'viewAllUsers');
     Route::post('view-user-roles/{id}', 'viewUserRole');
-    Route::post('delete-user/{id}', 'deleteUser');
+    Route::delete('delete-user/{id}', 'deleteUser');
     Route::post('invite', 'InviteOther');
-    Route::post('update-status/{id}', 'updateUserStatus');
 });
 
 
 Route::controller(InviteController::class)->prefix('invite')->group(function (){
     Route::get('invited-users', 'listOfInvitedUsers');
     Route::post('resend', 'reInvite');
-    Route::get('revoke/{id}', 'revoke');
+    Route::delete('revoke/{id}', 'revoke');
 
 });
 

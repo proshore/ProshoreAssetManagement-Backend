@@ -36,6 +36,8 @@ class EmployeeVendorController extends Controller
         ], Response::HTTP_OK);
 
     }
+
+
     public function viewUserRole(Request $request)
     {
         $role = VendorEmployee::find($request->id)->roles;
@@ -62,31 +64,5 @@ class EmployeeVendorController extends Controller
         ], Response::HTTP_OK);
     }
 
-
-
-
-    public function updateUserStatus(Request $request){
-        $employeeVendor=VendorEmployee::where('id',$request->id)->first();
-        try{
-            if (!$employeeVendor->activeStatus){
-                $employeeVendor->activeStatus=true;
-            }
-            else{
-                $employeeVendor->activeStatus=false;
-            }
-            $employeeVendor->save();
-            $result =[
-                'status' => 200,
-                'message' => 'User status updated'
-            ];
-        }
-        catch (Exception $e){
-            $result = [
-                'status' => 500,
-                'error' => $e->getMessage()
-            ];
-        }
-        return response()->json($result, $result['status']);
-    }
 
 }
