@@ -7,6 +7,7 @@ use App\Http\Requests\CheckEmailRequest;
 use App\Services\InviteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 
 class InviteController extends Controller
@@ -30,12 +31,12 @@ class InviteController extends Controller
         if (!$status) {
             return response()->json([
                 'message' => 'User does not exist in our database'
-            ], \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
             'message' => 'User re-invited successfully'
-        ],\Illuminate\Http\Response::HTTP_OK);
+        ],Response::HTTP_OK);
 
     }
     public function revoke(Request $request):JsonResponse
@@ -45,10 +46,10 @@ class InviteController extends Controller
         if (!$status) {
             return response()->json([
                 'message' => 'Cannot revoke invite. User does not exist in our database'
-            ], \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return response()->json([
             'message' => 'User  revoked successfully'
-        ],\Illuminate\Http\Response::HTTP_OK);
+        ],Response::HTTP_OK);
     }
 }

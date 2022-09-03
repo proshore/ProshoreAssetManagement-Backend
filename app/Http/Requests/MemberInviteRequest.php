@@ -36,12 +36,4 @@ class MemberInviteRequest extends FormRequest
      *
      * @return array
      * */
-    public function messages()
-    {
-        return [
-            'name.required' => 'User name required',
-            'role_id.required' => 'A valid role id is required!',
-            'vendor_employee_id.required' => 'user id required'
-        ];
-    }
 }

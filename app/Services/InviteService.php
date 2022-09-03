@@ -65,7 +65,7 @@ public function generateToken():string{
 
     public static function revokeInvite($request): bool
     {
-        $employeeVendor = InviteToken::where('id', $request->id)->first();
+        $employeeVendor = InviteToken::where('id', $request->id)->firstOrFail();
         if (!$employeeVendor) return false;
         //if users exists then delete their invite
         $employeeVendor->delete();
