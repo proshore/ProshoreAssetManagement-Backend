@@ -20,26 +20,4 @@ use App\Http\Controllers\API\InviteController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-//Admin Register Login and Logout
-Route::controller(AdminController::class)->prefix('admin')->group(function (){
-    Route::post('register', 'registerAdmin');
-    Route::post('login','loginAdmin');
-    Route::post('logout', 'logoutAdmin')->middleware('auth:sanctum');
-});
-
-//Route For The Data related To Vendor & Employee
-Route::controller(EmployeeVendorController::class)->prefix('admin')->group(function (){
-    Route::get('all-user', 'viewAllUsers');
-    Route::post('view-user-roles/{id}', 'viewUserRole');
-    Route::delete('delete-user/{id}', 'deleteUser');
-    Route::post('invite', 'InviteOther');
-});
-
-
-Route::controller(InviteController::class)->prefix('invite')->group(function (){
-    Route::get('invited-users', 'listOfInvitedUsers');
-    Route::post('resend', 'reInvite');
-    Route::delete('revoke/{id}', 'revoke');
-
-});
 
