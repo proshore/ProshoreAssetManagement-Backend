@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\UnauthorizedException;
 
 class UserService
 {
@@ -14,10 +15,7 @@ class UserService
         $validated = $request->validated();
 
         if (!Auth::attempt($validated)) {
-            // return response()->json([
-            //     'message' => 'Invalid login credentials'
-            // ], Response::HTTP_UNAUTHORIZED);
-            throw new Exception("Invalid login credentials");
+            throw new UnauthorizedException("Invalid login credentials");
         }
 
         return User::where('email', $request['email'])->firstOrFail();

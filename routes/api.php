@@ -30,3 +30,4 @@ Route::controller(AuthController::class)->prefix('users')->group(function () {
     });
 
 });
+
