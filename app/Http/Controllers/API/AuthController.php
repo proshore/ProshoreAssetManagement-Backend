@@ -3,28 +3,24 @@
 namespace App\Http\Controllers\API;
 
 use App\Services\UserService;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthController extends Controller
 {
-    protected $userService;
-
-    public function __construct(UserService $userService)
+    public function __construct(protected UserService $userService)
     {
         $this->userService = $userService;
     }
 
-    public function login(UserRequest $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $data = $this->userService->authenticateUser($request);
+        $validated = $request->validated();
 
-        return response()->json([
-            'access_token' => $data->createToken('authToken')->plainTextToken,
-            'token_type' => 'Bearer',
-        ], Response::HTTP_OK);
+        $token = $this->userService->authenticateUser($validated);
+
+        return $this->successResponse($token, null, Response::HTTP_OK);
     }
 }
