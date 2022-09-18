@@ -2,10 +2,9 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Validation\UnauthorizedException;
-use Symfony\Component\HttpFoundation\Response;
+use Exception;
 use App\Traits\HttpResponse;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -47,9 +46,9 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->renderable(function (UnauthorizedException $e, $request) {
+        $this->renderable(function (Exception $e, $request) {
             if ($request->is('api/*')) {
-                return $this->errorResponse($e->getMessage(), Response::HTTP_UNAUTHORIZED);
+                return $this->errorResponse($e->getMessage(), !$e->getCode() ? 500 : $e->getCode());
             }
         });
     }
