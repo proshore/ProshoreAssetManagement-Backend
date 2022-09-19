@@ -15,8 +15,8 @@ class UserService
             throw new Exception("Invalid login credentials", Response::HTTP_UNAUTHORIZED);
         }
 
-        $data = User::where('email', $validated['email'])->firstOrFail();
+        $user = User::where('email', $validated['email'])->firstOrFail();
 
-        return $data->createToken('authToken')->plainTextToken;
+        return $user->createToken('authToken')->plainTextToken;
     }
 }

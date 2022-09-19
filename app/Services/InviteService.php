@@ -25,16 +25,12 @@ class InviteService
             throw new Exception('Email already taken.', Response::HTTP_BAD_REQUEST);
         }
 
-        $user = Invite::create([
+        Invite::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'role_id' => $validated['role_id'],
             'token' => $token
         ]);
-
-        if (!$user) {
-            return false;
-        }
 
         Mail::to($validated['email'])->send(new InviteMail($url, $validated['name']));
         return true;

@@ -47,8 +47,14 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->renderable(function (Exception $e, $request) {
+            $code = 500;
+
+            if ($e->getcode() && $e->getcode() !== 2002) {
+                $code = $e->getcode();
+            }
+
             if ($request->is('api/*')) {
-                return $this->errorResponse($e->getMessage(), !$e->getCode() ? 500 : $e->getCode());
+                return $this->errorResponse($e->getMessage(), $code);
             }
         });
     }
