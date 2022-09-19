@@ -5,25 +5,25 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Response;
 use App\Services\InviteService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InviteRequest;
+use App\Http\Requests\InviteUserRequest;
 
 class InviteController extends Controller
 {
     public function __construct(protected InviteService $inviteService)
     {
-        $this->inviteService = $inviteService;
+
     }
 
-    public function sendInvite(InviteRequest $request)
+    public function sendInvite(InviteUserRequest $request)
     {
         $validated = $request->validated();
 
-        $data = $this->inviteService->processInvite($validated);
+        $inviteUserData = $this->inviteService->processInvite($validated);
 
-        if(!$data) {
+        if(!$inviteUserData) {
             return $this->errorResponse('User couldnot be invited', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->successResponse($data, 'User invited successfully', Response::HTTP_OK);
+        return $this->successResponse($inviteUserData, 'User invited successfully', Response::HTTP_OK);
     }
 }

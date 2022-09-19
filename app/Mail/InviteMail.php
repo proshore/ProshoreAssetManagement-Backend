@@ -18,8 +18,7 @@ class InviteMail extends Mailable
      */
     public function __construct(protected $url, protected $name)
     {
-        $this->url = $url;
-        $this->name = $name;
+
     }
 
     /**
