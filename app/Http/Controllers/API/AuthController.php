@@ -17,9 +17,9 @@ class AuthController extends Controller
 
     public function login(LoginUserRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        $validatedUserLogin = $request->validated();
 
-        $token = $this->userService->authenticateUser($validated);
+        $token = $this->userService->authenticateUser($validatedUserLogin);
 
         return $this->successResponse($token, null, Response::HTTP_OK);
     }

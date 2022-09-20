@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use App\Traits\HttpResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Http\Response;
+use PDOException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,15 +48,15 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->renderable(function (Exception $e, $request) {
-            $code = 500;
-
-            if ($e->getcode() && $e->getcode() !== 2002) {
-                $code = $e->getcode();
-            }
-
+        $this->renderable(function (UnauthorizedException $e, $request) {
             if ($request->is('api/*')) {
-                return $this->errorResponse($e->getMessage(), $code);
+                return $this->errorResponse($e->getMessage(), Response::HTTP_UNAUTHORIZED);
+            }
+        });
+
+        $this->renderable(function (PDOException $e, $request) {
+            if ($request->is('api/*')) {
+                return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         });
     }

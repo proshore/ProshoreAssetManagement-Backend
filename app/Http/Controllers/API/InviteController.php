@@ -16,9 +16,9 @@ class InviteController extends Controller
 
     public function sendInvite(InviteUserRequest $request)
     {
-        $validated = $request->validated();
+        $validatedInviteUser = $request->validated();
 
-        $inviteUserData = $this->inviteService->processInvite($validated);
+        $inviteUserData = $this->inviteService->processInvite($validatedInviteUser);
 
         if(!$inviteUserData) {
             return $this->errorResponse('User couldnot be invited', Response::HTTP_INTERNAL_SERVER_ERROR);
