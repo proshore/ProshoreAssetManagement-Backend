@@ -2,20 +2,19 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 
 class UserService
 {
-    public function authenticateUser($validated)
+    public function authenticateUser(array $validatedUserLogin): string
     {
-        if (!Auth::attempt($validated)) {
-            throw new UnauthorizedException("Invalid login credentials" );
+        if (!Auth::attempt($validatedUserLogin)) {
+            throw new UnauthorizedException("Invalid login credentials");
         }
 
-        $data = User::where('email', $validated['email'])->firstOrFail();
+        $user = Auth::user();
 
-        return $data->createToken('authToken')->plainTextToken;
+        return $user->createToken('authToken')->plainTextToken;
     }
 }

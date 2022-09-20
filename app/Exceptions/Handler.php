@@ -2,10 +2,11 @@
 
 namespace App\Exceptions;
 
+use App\Traits\HttpResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\UnauthorizedException;
-use Symfony\Component\HttpFoundation\Response;
-use App\Traits\HttpResponse;
+use Illuminate\Http\Response;
+use PDOException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +51,12 @@ class Handler extends ExceptionHandler
         $this->renderable(function (UnauthorizedException $e, $request) {
             if ($request->is('api/*')) {
                 return $this->errorResponse($e->getMessage(), Response::HTTP_UNAUTHORIZED);
+            }
+        });
+
+        $this->renderable(function (PDOException $e, $request) {
+            if ($request->is('api/*')) {
+                return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         });
     }
