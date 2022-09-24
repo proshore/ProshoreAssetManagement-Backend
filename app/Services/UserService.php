@@ -17,4 +17,9 @@ class UserService
 
         return $user->createToken('authToken')->plainTextToken;
     }
+
+    public function revokeUserToken(): void
+    {
+        Auth::user()->currentAccessToken()->delete();
+    }
 }
