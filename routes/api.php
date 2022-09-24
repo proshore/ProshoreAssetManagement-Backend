@@ -28,7 +28,7 @@ Route::controller(AuthController::class)->prefix('users')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
 
-        Route::delete('logout', 'logout');
+        Route::post('logout', 'logout');
 
         Route::post('invite', [InviteController::class, 'sendInvite']);
 
