@@ -16,7 +16,9 @@ class InviteService
     {
         $issuedAt = time();
 
-        $expirationTime = time() + InviteConstant::DEFAULT_EXIPIRE_AT;
+        $expirationTime = $issuedAt . InviteConstant::DEFAULT_EXIPIRE_AT;
+
+        error_log($expirationTime);
 
         $payload = array(
             'name' => $user['name'],
