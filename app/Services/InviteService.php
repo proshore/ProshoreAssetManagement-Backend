@@ -8,6 +8,7 @@ use App\Mail\InviteMail;
 use Illuminate\Support\Facades\Mail;
 use App\Constants\Invite as InviteConstant;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\InviteResource;
 
 class InviteService
 {
@@ -33,7 +34,7 @@ class InviteService
         return $token;
     }
 
-    public function processInvite(array $validatedInviteUser): mixed
+    public function processInvite(array $validatedInviteUser)
     {
         $token = $this->generateToken([
             'name' => $validatedInviteUser['name'],
@@ -57,7 +58,7 @@ class InviteService
             );
 
         return [
-            'user' => UserResource::make($user),
+            'user' => InviteResource::make($user),
             'token' => $token
         ];
     }
