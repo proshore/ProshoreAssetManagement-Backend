@@ -7,3 +7,4 @@ return [
     'algorithm' => env('JWT_ALGORITHM') ?? 'HS256'
 
 ];
+
