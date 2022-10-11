@@ -18,7 +18,7 @@ class InviteResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role_id' => $this->role_id
+            'role' => RoleResource::make($this->role)
         ];
     }
 }
