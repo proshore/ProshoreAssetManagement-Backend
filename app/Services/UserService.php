@@ -2,13 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use App\Models\Invite;
-use App\Models\UserRole;
-use Firebase\JWT\ExpiredException;
-use App\Http\Resources\UserResource;
+use Firebase\JWT\{JWT, Key};
+use App\Models\{User, Invite, UserRole};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 
@@ -25,7 +20,7 @@ class UserService
         $token = $user->createToken('authToken')->plainTextToken;
 
         return [
-            'user' => UserResource::make($user),
+            'user' => $user,
             'token' => $token
         ];
     }
