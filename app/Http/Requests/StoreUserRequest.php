@@ -29,14 +29,7 @@ class StoreUserRequest extends FormRequest
             'email'=> ['required', 'string', 'email', 'unique:users', 'max:255'],
             'password' => [
                 'required',
-                Password::min(8)
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols()
-            ],
-            'confirm_password' => [
-                'required',
-                'same:password',
+                'confirmed',
                 Password::min(8)
                     ->mixedCase()
                     ->numbers()
