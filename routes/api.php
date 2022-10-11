@@ -2,8 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\InviteController;
+use App\Http\Controllers\API\{AuthController, InviteController};
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +29,13 @@ Route::controller(AuthController::class)->prefix('users')->group(function () {
 
         Route::post('logout', 'logout');
 
-        Route::post('invite', [InviteController::class, 'sendInvite']);
+        Route::controller(InviteController::class)->group(function () {
+
+            Route::post('invite', 'sendInvite');
+
+            Route::get('invite', 'listInvited');
+
+        });
 
     });
 

@@ -5,10 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Services\UserService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Http\Requests\LoginUserRequest;
-use App\Http\Requests\StoreUserRequest;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Http\Requests\{LoginUserRequest, StoreUserRequest};
+use Symfony\Component\HttpFoundation\{Response, JsonResponse};
 
 class AuthController extends Controller
 {
@@ -23,24 +21,35 @@ class AuthController extends Controller
 
         $storeUser = $this->userService->storeUser($validatedStoreUser);
 
-        return $this->successResponse(UserResource::make($storeUser), 'User registered successfully', Response::HTTP_OK);
+        return $this->successResponse(
+            UserResource::make($storeUser),
+            'User registered successfully',
+            Response::HTTP_OK
+        );
     }
 
     public function login(LoginUserRequest $request): JsonResponse
     {
         $validatedUserLogin = $request->validated();
 
-        $LoginUser = $this->userService->authenticateUser($validatedUserLogin);
+        $loginUser = $this->userService->authenticateUser($validatedUserLogin);
 
-        return $this->successResponse($LoginUser, 'User login successfully', Response::HTTP_OK);
+        return $this->successResponse(
+            [
+                'user' => UserResource::make($loginUser['user']),
+                'token' => $loginUser['token']
+            ],
+            'User login successfully',
+            Response::HTTP_OK
+        );
     }
 
     public function logout(): JsonResponse
     {
-        $revokedToken = $this->userService->revokeUserToken();
+        $this->userService->revokeUserToken();
 
         return $this->successResponse(
-            $revokedToken,
+            null,
             'Logout Successfully',
             Response::HTTP_OK
         );
