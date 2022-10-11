@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@email.com',
             'email_verified_at' => now(),
-            'password' => ' Admin@123',
+            'password' => 'Admin@123',
         ]);
     }
 }
