@@ -43,9 +43,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-        public function setPasswordAttribute($password)
+    public function setPasswordAttribute($password)
     {
-        $this->attributes['password'] =  bcrypt(trim($password));
+        $this->attributes['password'] = bcrypt($password);
     }
 
     public function roles(): BelongsToMany
