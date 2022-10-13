@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use Firebase\JWT\JWT;
 use App\Models\Invite;
 use App\Mail\InviteMail;
 use Illuminate\Support\Facades\Mail;
 use App\Constants\Invite as InviteConstant;
+use App\Models\Role;
 
 class InviteService
 {
@@ -46,17 +48,10 @@ class InviteService
 
         $url = $this->generateUrl(
             $token,
-            [
-                'email' => $validatedInviteUser['email'],
-                'name' => $validatedInviteUser['name']
-            ]
+            $validatedInviteUser
         );
 
-        $user = Invite::create([
-            'name' => $validatedInviteUser['name'],
-            'email' => $validatedInviteUser['email'],
-            'role_id' => $validatedInviteUser['role_id'],
-        ]);
+        $user = Invite::create($validatedInviteUser);
 
         Mail::to($validatedInviteUser['email'])
             ->send(
@@ -71,4 +66,6 @@ class InviteService
             'token' => $token
         ];
     }
+
+
 }
