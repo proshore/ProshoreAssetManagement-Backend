@@ -22,13 +22,6 @@ class InviteController extends Controller
 
         $inviteUserData = $this->inviteService->processInvite($validatedInviteUser);
 
-        if(!$inviteUserData) {
-            return $this->errorResponse(
-                'User couldnot be invited',
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-
         return $this->successResponse(
             [
                 'user' => InviteResource::make($inviteUserData['user']),
