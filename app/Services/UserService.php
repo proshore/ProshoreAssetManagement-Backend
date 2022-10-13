@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Firebase\JWT\{JWT, Key};
-use App\Models\{User, Invite, Role, UserRole};
+use App\Models\{User, Invite};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 

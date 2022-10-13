@@ -2,13 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use Firebase\JWT\JWT;
 use App\Models\Invite;
 use App\Mail\InviteMail;
 use Illuminate\Support\Facades\Mail;
 use App\Constants\Invite as InviteConstant;
-use App\Models\Role;
 
 class InviteService
 {
@@ -39,12 +37,9 @@ class InviteService
         return $token;
     }
 
-    public function processInvite(array $validatedInviteUser)
+    public function processInvite(array $validatedInviteUser): array
     {
-        $token = $this->generateToken([
-            'name' => $validatedInviteUser['name'],
-            'email' => $validatedInviteUser['email']
-        ]);
+        $token = $this->generateToken($validatedInviteUser);
 
         $url = $this->generateUrl(
             $token,
@@ -66,6 +61,4 @@ class InviteService
             'token' => $token
         ];
     }
-
-
 }
