@@ -7,16 +7,19 @@ use App\Models\Invite;
 use App\Mail\InviteMail;
 use Illuminate\Support\Facades\Mail;
 use App\Constants\Invite as InviteConstant;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\InviteResource;
 
 class InviteService
 {
+    public function generateUrl($token, array $user): String
+    {
+        return config('frontend.url') . '/register/' . $token . '?email=' . $user['email'] . '&name=' . urlencode($user['name']);
+    }
+
     public function generateToken(array $user): string
     {
         $issuedAt = time();
 
-        $expirationTime = time() + InviteConstant::DEFAULT_EXIPIRE_AT;
+        $expirationTime = $issuedAt . InviteConstant::DEFAULT_EXIPIRE_AT;
 
         $payload = array(
             'name' => $user['name'],
@@ -34,20 +37,16 @@ class InviteService
         return $token;
     }
 
-    public function processInvite(array $validatedInviteUser)
+    public function processInvite(array $validatedInviteUser): array
     {
-        $token = $this->generateToken([
-            'name' => $validatedInviteUser['name'],
-            'email' => $validatedInviteUser['email']
-        ]);
+        $token = $this->generateToken($validatedInviteUser);
 
-        $url = config('frontend.url') . '/register/' . $token . '?email=' . $validatedInviteUser['email'] . '&name=' . urlencode($validatedInviteUser['name']);
+        $url = $this->generateUrl(
+            $token,
+            $validatedInviteUser
+        );
 
-        $user = Invite::create([
-            'name' => $validatedInviteUser['name'],
-            'email' => $validatedInviteUser['email'],
-            'role_id' => $validatedInviteUser['role_id'],
-        ]);
+        $user = Invite::create($validatedInviteUser);
 
         Mail::to($validatedInviteUser['email'])
             ->send(
@@ -58,7 +57,7 @@ class InviteService
             );
 
         return [
-            'user' => InviteResource::make($user),
+            'user' => $user,
             'token' => $token
         ];
     }

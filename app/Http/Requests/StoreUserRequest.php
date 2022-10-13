@@ -23,14 +23,19 @@ class StoreUserRequest extends FormRequest
      * @return array<string, mixed>
      */
     public function rules()
-    {  
+    {
         return [
-                'name'=> ['required', 'string', 'max:255'],
-                'email'=> ['required', 'string', 'email', 'unique:users', 'max:255'],
-                'password' => ['required', Password::min(8)
-                                            ->mixedCase()
-                                            ->numbers()
-                ]
+            'name'=> ['required', 'string', 'max:255'],
+            'email'=> ['required', 'string', 'email', 'unique:users', 'max:255'],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
+            'token' => ['required', 'string']
         ];
     }
 }

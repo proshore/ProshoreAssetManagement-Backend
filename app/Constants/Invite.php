@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-class Invite
+final class Invite
 {
     const DEFAULT_EXIPIRE_AT = 432000;    // 5 days
 
