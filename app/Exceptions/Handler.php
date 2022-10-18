@@ -4,11 +4,12 @@ namespace App\Exceptions;
 
 use PDOException;
 use App\Traits\HttpResponse;
-use Firebase\JWT\ExpiredException;
 use Illuminate\Http\Response;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class Handler extends ExceptionHandler
 {
@@ -68,12 +69,16 @@ class Handler extends ExceptionHandler
             }
         });
 
-        $this->renderable(function (ExpiredException $e, $request) {
+        $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
-                return $this->errorResponse($e->getMessage(), Response::HTTP_UNAUTHORIZED);
+                return $this->errorResponse($e->getMessage(), Response::HTTP_NOT_FOUND);
             }
         });
 
-
+        $this->renderable(function (BadRequestException $e, $request) {
+            if ($request->is('api/*')) {
+                return $this->errorResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
+            }
+        });
     }
 }

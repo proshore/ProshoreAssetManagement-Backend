@@ -31,4 +31,44 @@ class InviteController extends Controller
             Response::HTTP_OK
         );
     }
+
+    public function sendReInvite($id): JsonResponse
+    {
+        $reInviteUser = $this->inviteService->reInvite($id);
+
+        return $this->successResponse(
+            [
+                'user' => InviteResource::make($reInviteUser['user']),
+                'token' => $reInviteUser['token']
+            ],
+            'User re-invited successfully',
+            Response::HTTP_OK
+        );
+    }
+
+    public function listInvited(): JsonResponse
+    {
+        $invitedUsers = $this->inviteService->invitedUsers();
+
+        return $this->successResponse(
+            [
+                'total' => count($invitedUsers),
+                'invited_users' => InviteResource::collection($invitedUsers)
+            ],
+            null,
+            Response::HTTP_OK
+        );
+    }
+
+    public function revoke($id): JsonResponse
+    {
+        $this->inviteService->revokeInvite($id);
+
+        return $this->successResponse(
+            null,
+            'User invite revoked successfully',
+            Response::HTTP_OK
+        );
+
+    }
 }
