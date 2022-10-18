@@ -59,4 +59,16 @@ class InviteController extends Controller
             Response::HTTP_OK
         );
     }
+
+    public function revoke($id): JsonResponse
+    {
+        $this->inviteService->revokeInvite($id);
+
+        return $this->successResponse(
+            null,
+            'User invite revoked successfully',
+            Response::HTTP_OK
+        );
+
+    }
 }

@@ -152,4 +152,18 @@ class InviteService
      {
          return Invite::latest()->withTrashed()->get();
      }
+
+    public function revokeInvite($id): void
+    {
+        $user = Invite::find($id);
+
+        if (!$user) {
+            throw new NotFoundHttpException("User with id '{$id}' cannot be found");
+        }
+
+        $user->status = 'inactive';
+        $user->save();
+
+        $user->delete();
+    }
 }
