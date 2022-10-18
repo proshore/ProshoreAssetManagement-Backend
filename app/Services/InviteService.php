@@ -58,7 +58,7 @@ class InviteService
         return true;
     }
 
-    private function getInvitedUser($email, $includeTrash = false): User
+    private function getInvitedUser($email, $includeTrash = false): mixed
     {
         if ($includeTrash) {
             $user = Invite::withTrashed()->where('email', $email)->first();
