@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Firebase\JWT\{JWT, Key};
 use App\Models\{User, Invite};
+use Firebase\JWT\{JWT, Key};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 
@@ -49,6 +49,11 @@ class UserService
         $createdUser = User::create($validatedStoreUser);
 
         $createdUser->roles()->attach($invitedUser->role);
+
+        $invitedUser->status = 'inactive';
+        $invitedUser->save();
+
+        $invitedUser->delete();
 
         return $createdUser;
     }
