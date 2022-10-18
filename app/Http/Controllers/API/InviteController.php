@@ -45,4 +45,18 @@ class InviteController extends Controller
             Response::HTTP_OK
         );
     }
+
+    public function listInvited(): JsonResponse
+    {
+        $invitedUsers = $this->inviteService->invitedUsers();
+
+        return $this->successResponse(
+            [
+                'total' => count($invitedUsers),
+                'invited_users' => InviteResource::collection($invitedUsers)
+            ],
+            null,
+            Response::HTTP_OK
+        );
+    }
 }

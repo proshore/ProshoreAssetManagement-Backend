@@ -6,6 +6,7 @@ use App\Models\User;
 use Firebase\JWT\JWT;
 use App\Models\Invite;
 use App\Mail\InviteMail;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use App\Constants\Invite as InviteConstant;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -146,4 +147,9 @@ class InviteService
             'token' => $token
         ];
     }
+
+    public function invitedUsers(): Collection
+     {
+         return Invite::latest()->withTrashed()->get();
+     }
 }
