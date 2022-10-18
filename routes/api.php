@@ -35,6 +35,8 @@ Route::controller(AuthController::class)->prefix('users')->group(function () {
 
             Route::get('invite', 'listInvited');
 
+            Route::post('invite/resend/{id}', 'sendReinvite');
+
         });
 
     });
