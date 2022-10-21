@@ -29,6 +29,8 @@ Route::controller(AuthController::class)->prefix('users')->group(function () {
 
         Route::post('logout', 'logout');
 
+        Route::post('forgot-password', 'forgotPassword');
+
         Route::controller(InviteController::class)->group(function () {
 
             Route::post('invite', 'sendInvite');
