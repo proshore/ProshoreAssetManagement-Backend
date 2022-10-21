@@ -5,8 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Services\UserService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Http\Requests\{LoginUserRequest, StoreUserRequest};
 use Symfony\Component\HttpFoundation\{Response, JsonResponse};
+use App\Http\Requests\{ForgotPasswordRequest, LoginUserRequest, StoreUserRequest};
 
 class AuthController extends Controller
 {
@@ -52,6 +52,18 @@ class AuthController extends Controller
             null,
             'Logout Successfully',
             Response::HTTP_OK
+        );
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
+        $validatedForgetPassword = $request->safe()->only(['email']);
+
+        $this->userService->passwordResetLink($validatedForgetPassword);
+
+        return $this->successResponse(
+            null,
+            'Password reset email sent successfully'
         );
     }
 }
