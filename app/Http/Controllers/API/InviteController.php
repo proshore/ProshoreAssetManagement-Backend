@@ -69,6 +69,5 @@ class InviteController extends Controller
             'User invite revoked successfully',
             Response::HTTP_OK
         );
-
     }
 }

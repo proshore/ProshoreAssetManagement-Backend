@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\{User, Invite};
 use Firebase\JWT\{JWT, Key};
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\UnauthorizedException;
 
 class UserService
@@ -56,5 +57,10 @@ class UserService
         $invitedUser->delete();
 
         return $createdUser;
+    }
+
+    public function passwordResetLink(array $validatedForgetPassword): string
+    {
+        return Password::sendResetLink($validatedForgetPassword);
     }
 }
