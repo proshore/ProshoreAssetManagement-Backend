@@ -6,7 +6,8 @@ use App\Services\UserService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\{Response, JsonResponse};
-use App\Http\Requests\{ForgotPasswordRequest, LoginUserRequest, StoreUserRequest};
+use App\Http\Requests\{ForgotPasswordRequest, LoginUserRequest, ResetPasswordRequest, StoreUserRequest};
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -64,6 +65,25 @@ class AuthController extends Controller
         return $this->successResponse(
             null,
             'Password reset email sent successfully'
+        );
+    }
+
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $validatedResetPassword = $request->safe()->only(['email', 'password', 'password_confirmation', 'token']);
+
+        $updateUserPassword = $this->userService->updatePassword($validatedResetPassword);
+
+        if ($updateUserPassword !== Password::INVALID_TOKEN) {
+            return $this->successResponse(
+                null,
+                'Password reset successfully'
+            );
+        }
+
+        return $this->errorResponse(
+            'Token expired or not valid',
+            Response::HTTP_BAD_REQUEST
         );
     }
 }
