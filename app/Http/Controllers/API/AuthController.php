@@ -25,7 +25,6 @@ class AuthController extends Controller
         return $this->successResponse(
             UserResource::make($storeUser),
             'User registered successfully',
-            Response::HTTP_OK
         );
     }
 
@@ -41,7 +40,6 @@ class AuthController extends Controller
                 'token' => $loginUser['token']
             ],
             'User login successfully',
-            Response::HTTP_OK
         );
     }
 
@@ -52,7 +50,6 @@ class AuthController extends Controller
         return $this->successResponse(
             null,
             'Logout Successfully',
-            Response::HTTP_OK
         );
     }
 
