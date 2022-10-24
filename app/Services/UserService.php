@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\{User, Invite};
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Firebase\JWT\{JWT, Key};
+use App\Models\{User, Invite};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserService
 {
@@ -62,5 +65,23 @@ class UserService
     public function passwordResetLink(array $validatedForgetPassword): string
     {
         return Password::sendResetLink($validatedForgetPassword);
+    }
+
+    public function updatePassword(array $validatedResetPassword): mixed
+    {
+        $user = User::where('email', $validatedResetPassword['email'])->first();
+
+        if (!Hash::check($validatedResetPassword['password'], $user->password)) {
+            return Password::reset($validatedResetPassword, function ($user, $password) {
+                $user->forceFill(
+                    ['password' => $password]
+                )->setRememberToken(Str::random(60));
+
+                $user->save();
+            });
+        }
+
+        return throw new BadRequestException('cannot use old password as a password reset');
+
     }
 }
