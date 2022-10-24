@@ -25,11 +25,13 @@ Route::controller(AuthController::class)->prefix('users')->group(function () {
 
     Route::post('login', 'login');
 
+    Route::post('forgot-password', 'forgotPassword');
+
+    Route::post('reset-password', 'resetPassword');
+
     Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('logout', 'logout');
-
-        Route::post('forgot-password', 'forgotPassword');
 
         Route::controller(InviteController::class)->group(function () {
 
