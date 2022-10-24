@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Response;
 use App\Services\InviteService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\InviteResource;
@@ -28,7 +27,6 @@ class InviteController extends Controller
                 'token' => $inviteUserData['token']
             ],
             'User invited successfully',
-            Response::HTTP_OK
         );
     }
 
@@ -42,7 +40,6 @@ class InviteController extends Controller
                 'token' => $reInviteUser['token']
             ],
             'User re-invited successfully',
-            Response::HTTP_OK
         );
     }
 
@@ -56,7 +53,6 @@ class InviteController extends Controller
                 'invited_users' => InviteResource::collection($invitedUsers)
             ],
             null,
-            Response::HTTP_OK
         );
     }
 
@@ -67,7 +63,6 @@ class InviteController extends Controller
         return $this->successResponse(
             null,
             'User invite revoked successfully',
-            Response::HTTP_OK
         );
     }
 }
