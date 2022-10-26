@@ -71,17 +71,18 @@ class UserService
     {
         $user = User::where('email', $validatedResetPassword['email'])->first();
 
-        if (!Hash::check($validatedResetPassword['password'], $user->password)) {
-            return Password::reset($validatedResetPassword, function ($user, $password) {
-                $user->forceFill(
-                    ['password' => $password]
-                )->setRememberToken(Str::random(60));
-
-                $user->save();
-            });
+        if (Hash::check($validatedResetPassword['password'], $user->password)) {
+            return throw new BadRequestException('cannot use old password as a password reset');
         }
 
-        return throw new BadRequestException('cannot use old password as a password reset');
+        return Password::reset($validatedResetPassword, function ($user, $password) {
+            $user->forceFill(
+                ['password' => $password]
+            )->setRememberToken(Str::random(60));
 
+            $user->tokens()->delete();
+
+            $user->save();
+        });
     }
 }
