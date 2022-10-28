@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserService
 {
@@ -70,6 +71,10 @@ class UserService
     public function updatePassword(array $validatedResetPassword): mixed
     {
         $user = User::where('email', $validatedResetPassword['email'])->first();
+
+        if (!$user) {
+            throw new NotFoundHttpException("User with this email cannot be found");
+        }
 
         if (Hash::check($validatedResetPassword['password'], $user->password)) {
             return throw new BadRequestException('cannot use old password as a password reset');
