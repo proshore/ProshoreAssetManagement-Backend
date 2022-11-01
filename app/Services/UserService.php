@@ -5,11 +5,9 @@ namespace App\Services;
 use Illuminate\Support\Str;
 use Firebase\JWT\{JWT, Key};
 use App\Models\{User, Invite};
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 use App\Constants\Invite as InviteConstant;
 use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Support\Facades\{Auth, Hash, Password};
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
