@@ -26,7 +26,7 @@ class InviteUserRequest extends FormRequest
         return [
             'name'=> ['required', 'string', 'max:255'],
             'email'=> ['required', 'email', 'max:255'],
-            'role_id'=> ['required', 'integer', 'exists:roles,id']
+            'role_id'=> ['required', 'integer', 'exists:roles,id,name,!Admin']  // restricting role_id from using Admin
         ];
     }
 }

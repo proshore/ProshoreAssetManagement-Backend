@@ -2,15 +2,14 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Firebase\JWT\{JWT, Key};
 use App\Models\{User, Invite};
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Password;
+use App\Constants\Invite as InviteConstant;
 use Illuminate\Validation\UnauthorizedException;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Illuminate\Support\Facades\{Auth, Hash, Password};
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserService
 {
@@ -35,14 +34,22 @@ class UserService
         Auth::user()->currentAccessToken()->delete();
     }
 
-    public function storeUser(array $validatedStoreUser): User
+    public function decodeToken($token, $resource): array
     {
         $decodedToken = JWT::decode(
+            $token,
+            $resource
+        );
+
+        return (array) $decodedToken;
+    }
+
+    public function storeUser(array $validatedStoreUser): User
+    {
+        $decodedTokenArray = $this->decodeToken(
             $validatedStoreUser['token'],
             new Key(config('jwt.secret_key'), config('jwt.algorithm'))
         );
-
-        $decodedTokenArray = (array) $decodedToken;
 
         $invitedUser = Invite::where(
             [
@@ -55,10 +62,8 @@ class UserService
 
         $createdUser->roles()->attach($invitedUser->role);
 
-        $invitedUser->status = 'inactive';
+        $invitedUser->status = InviteConstant::EXPIRED;
         $invitedUser->save();
-
-        $invitedUser->delete();
 
         return $createdUser;
     }

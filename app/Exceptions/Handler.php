@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use PDOException;
 use App\Traits\HttpResponse;
+use Firebase\JWT\ExpiredException;
 use Illuminate\Http\Response;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\UnauthorizedException;
@@ -80,5 +81,12 @@ class Handler extends ExceptionHandler
                 return $this->errorResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
             }
         });
+
+        $this->renderable(function (ExpiredException $e, $request) {
+            if ($request->is('api/*')) {
+                return $this->errorResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
+            }
+        });
+
     }
 }

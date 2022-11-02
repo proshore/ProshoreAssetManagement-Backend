@@ -23,7 +23,7 @@ class InviteService
     {
         $issuedAt = time();
 
-        $expirationTime = $issuedAt . InviteConstant::DEFAULT_EXIPIRE_AT;
+        $expirationTime = $issuedAt + InviteConstant::DEFAULT_EXIPIRE_AT;
 
         $payload = array(
             'name' => $user['name'],
@@ -78,41 +78,44 @@ class InviteService
             $validatedInviteUser
         );
 
-        $invitedUser = $this->getInvitedUser($validatedInviteUser['email'], true);
+        $previousInvitedUser = $this->getInvitedUser($validatedInviteUser['email'], true);
 
-        $oldUser = $this->checkUserAlreadyCreated($validatedInviteUser['email']);
+        $registeredUser = $this->checkUserAlreadyCreated($validatedInviteUser['email']);
 
-        if ($oldUser) {
-            throw new BadRequestException('user already created');
+        if ($registeredUser) {
+            throw new BadRequestException('User already created');
         }
 
-        $user = [...$validatedInviteUser, 'status' => 'active'];
+        $validatedInviteUserWithStatus = [
+            ...$validatedInviteUser,
+            'status' => InviteConstant::PENDING
+        ];
 
-        if ($invitedUser) {
-            if ($invitedUser->status == 'active') {
-                throw new  BadRequestException('user already invited');
+        if ($previousInvitedUser) {
+            if ($previousInvitedUser->status === InviteConstant::PENDING) {
+                throw new  BadRequestException('User already invited');
             }
 
-            $invitedUser->restore();
+            $restoreInviteUser = $previousInvitedUser->restore();
 
-            $user = $this->getInvitedUser($validatedInviteUser['email']);
+            $restoreInviteUser = $this->getInvitedUser($validatedInviteUser['email']);
 
-            $user->status = 'active';
-            $user->save();
+            $restoreInviteUser->status = InviteConstant::PENDING;
+            $restoreInviteUser->save();
         } else {
-            $user = Invite::create($user);
+            $createInviteUser = Invite::create($validatedInviteUserWithStatus);
         }
 
         $this->sendMail(
-            $validatedInviteUser['email'],
-            new InviteMail(
-                    $url,
-                    $validatedInviteUser['name']
-                )
-            );
+        $validatedInviteUser['email'],
+        new InviteMail(
+                $url,
+                $validatedInviteUser['name']
+            )
+        );
 
         return [
-            'user' => $user,
+            'user' => $previousInvitedUser ? $restoreInviteUser : $createInviteUser,
             'token' => $token
         ];
     }
@@ -149,21 +152,27 @@ class InviteService
     }
 
     public function invitedUsers(): Collection
-     {
-         return Invite::latest()->withTrashed()->get();
-     }
+    {
+        return Invite::latest()->get();
+    }
 
     public function revokeInvite($id): void
     {
-        $user = Invite::find($id);
+        $user = Invite::where('id', $id);
 
-        if (!$user) {
+        if (!$user->first()) {
             throw new NotFoundHttpException("User with id '{$id}' cannot be found");
         }
 
-        $user->status = 'inactive';
-        $user->save();
+        if ($user->where('status', InviteConstant::EXPIRED)->first()) {
+            throw new BadRequestException("User cannot be revoked");
+        }
 
-        $user->delete();
+        $retriveUser = $user->first();
+
+        $retriveUser->status = InviteConstant::EXPIRED;
+        $retriveUser->save();
+
+        $retriveUser->delete();
     }
 }
