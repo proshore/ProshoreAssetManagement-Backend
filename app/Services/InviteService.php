@@ -160,7 +160,9 @@ class InviteService
     {
         $user = Invite::where('id', $id);
 
-        if (!$user->first()) {
+        $retrieveUser = $user->first();
+
+        if (!$retrieveUser) {
             throw new NotFoundHttpException("User with id '{$id}' cannot be found");
         }
 
@@ -168,11 +170,9 @@ class InviteService
             throw new BadRequestException("User cannot be revoked");
         }
 
-        $retriveUser = $user->first();
+        $retrieveUser->status = InviteConstant::EXPIRED;
+        $retrieveUser->save();
 
-        $retriveUser->status = InviteConstant::EXPIRED;
-        $retriveUser->save();
-
-        $retriveUser->delete();
+        $retrieveUser->delete();
     }
 }
