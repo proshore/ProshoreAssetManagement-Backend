@@ -51,6 +51,10 @@ class UserService
             new Key(config('jwt.secret_key'), config('jwt.algorithm'))
         );
 
+        if ($decodedTokenArray['email'] !== $validatedStoreUser['email'] || $decodedTokenArray['name'] !== $validatedStoreUser['name']) {
+            return throw new BadRequestException("The given user details aren't valid");
+        }
+
         $invitedUser = Invite::where(
             [
                 ['email', $decodedTokenArray['email']],
@@ -82,7 +86,7 @@ class UserService
         }
 
         if (Hash::check($validatedResetPassword['password'], $user->password)) {
-            return throw new BadRequestException('cannot use old password as a password reset');
+            return throw new BadRequestException('Cannot use old password as a password reset');
         }
 
         return Password::reset($validatedResetPassword, function ($user, $password) {
